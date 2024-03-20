@@ -9,8 +9,31 @@ public class Main {
         sortAndPrint("All Tasks", tasks);
 
         Comparator<Task> sortByPriority = Comparator.comparing(Task::getPriority);
+
         Set<Task> annsTasks = TaskData.getTasks("Ann");
         sortAndPrint("Ann's Tasks", annsTasks, sortByPriority);
+        Set<Task> bobsTasks = TaskData.getTasks("Bob");
+        Set<Task> carolsTasks = TaskData.getTasks("Carol");
+
+        Set<Task> tasksWithOwners = getUnion(List.of(bobsTasks, annsTasks, carolsTasks));
+
+        sortAndPrint("Tasks with owners", tasksWithOwners);
+
+        Set<Task> tasksWithoutOwners = getDifference(tasks, tasksWithOwners);
+        sortAndPrint("Tasks without owners", tasksWithoutOwners);
+
+
+        Set<Task> tasksWithMultipleOwners = new HashSet<>();
+        Set<Task> annBobIntersect = getIntersect(annsTasks, bobsTasks);
+        Set<Task> annCarolIntersect = getIntersect(annsTasks, carolsTasks);
+        Set<Task> bobCarolIntersect = getIntersect(bobsTasks, carolsTasks);
+
+        tasksWithMultipleOwners.addAll(annBobIntersect);
+        tasksWithMultipleOwners.addAll(annCarolIntersect);
+        tasksWithMultipleOwners.addAll(bobCarolIntersect);
+
+        sortAndPrint("Tasks with multiple owners", tasksWithMultipleOwners);
+
 
     }
 
@@ -29,19 +52,28 @@ public class Main {
         list.forEach(System.out::println);
     }
 
-    public static Set<Task> getUnion(Set<Task> setA, Set<Task> setB){
-        Set<Task> unionSet = new HashSet<>(setA);
-        unionSet.addAll(setB);
-
+    public static Set<Task> getUnion(List<Set<Task>> sets) {
+        Set<Task> unionSet = new HashSet<>();
+        for (Set<Task> set : sets) {
+            unionSet.addAll(set);
+        }
         return unionSet;
     }
 
-    public static Set<Task> getIntersect(Set<Task> setA, Set<Task> setB){
+    public static Set<Task> getIntersect(Set<Task> setA,  Set<Task> setB){
         Set<Task> intersectionSet = new HashSet<>();
 
-
+        intersectionSet.addAll(setA);
+        intersectionSet.retainAll(setB);
 
         return intersectionSet;
+    }
+
+    public static Set<Task> getDifference (Set<Task> setA, Set<Task> setB){
+        Set<Task> differences = new HashSet<>(setA);
+        differences.removeAll(setB);
+
+        return differences;
     }
 
 }
