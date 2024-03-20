@@ -1,6 +1,6 @@
 package dev.lpa;
 
-enum Priority{HIGH, MDEIUM, LOW}
+enum Priority{HIGH, MEDIUM, LOW}
 
 enum Status{IN_QUEUE, ASSIGNED, IN_PROGRESS}
 
